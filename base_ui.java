@@ -29,6 +29,12 @@ class WorkBench extends JPanel {
         //G.fillOval(originX+x*delta-delta/8,originY-y*delta-delta/8,delta/4,delta/4);
     }
 
+    public void var_plotpoint(int x, int y, int px, Graphics G)
+    {
+        G.fillRect(originX + x*delta - delta/8, originY - y*delta - delta/8, px*delta/4, px*delta/4);
+        //G.fillOval(originX+x*delta-delta/8,originY-y*delta-delta/8,delta/4,delta/4);
+    }
+
     public void plotOrigin(Graphics G)
     {
         G.setColor(foreground);
@@ -87,8 +93,8 @@ class WorkBench extends JPanel {
         }
     
         G.setColor(dark_lines);
-        G.drawRect(originX-1,1,2,height);
-        G.drawRect(1,originY-1,width,2);
+        G.drawLine(originX+2,originY*2-getHeight(),originX+2,originY*2+getHeight());
+        G.drawLine(originX-1,originY*2-getHeight(),originX-1,originY*2+getHeight());
         G.drawLine(originX,originY*2-getHeight(),originX,originY*2+getHeight());
         G.drawLine(originX*2-getWidth(),originY,originX*2+getWidth(),originY);
         //G.setColor(Color.BLUE);
