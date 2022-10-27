@@ -86,15 +86,14 @@ class WorkBench extends JPanel {
             xCoord--;
         }
     
-        Color c = new Color(0,153,0);
-        G.setColor(c);
+        G.setColor(dark_lines);
         G.drawRect(originX-1,1,2,height);
         G.drawRect(1,originY-1,width,2);
         G.drawLine(originX,originY*2-getHeight(),originX,originY*2+getHeight());
         G.drawLine(originX*2-getWidth(),originY,originX*2+getWidth(),originY);
-        G.setColor(Color.BLUE);
-        G.fillOval(originX-delta/4,originY-delta/4,delta/2,delta/2);
-        G.setColor(Color.black);
+        //G.setColor(Color.BLUE);
+        //G.fillOval(originX-delta/4,originY-delta/4,delta/2,delta/2);
+        G.setColor(foreground);
         if(delta!=10)
             G.drawString("(0,0)",originX+delta/4,originY+delta/4);
     }
@@ -103,7 +102,7 @@ class WorkBench extends JPanel {
     protected void paintComponent(Graphics G) 
     {
         super.paintComponent(G);
-        int x, y, x2, y2;
+        //int x, y, x2, y2;
 
         height = getHeight();
         width  = getWidth();
