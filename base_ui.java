@@ -7,9 +7,13 @@ class WorkBench extends JPanel {
 
     public int originX = 0;
     public int originY = 0;
- //  public int delta   = 50;
-    public int width   = 0;
+    public int delta   = 8;
     public int height  = 0;
+    public int width   = 0;
+    
+    Color background = new Color(32,33,36);
+    Color foreground = new Color(61,64,67);
+    Color dark_lines = new Color(14,15,16);
  //  LIGHT+GRAY = "#565656", DARK+GRAY = "#2a2b2b" 
 
     Insets ins;
@@ -19,25 +23,99 @@ class WorkBench extends JPanel {
        
     }
 
+    public void plotpoint(int x, int y, Graphics G)
+    {
+        G.fillRect(originX + x*delta - delta/8, originY - y*delta - delta/8, delta/4, delta/4);
+        //G.fillOval(originX+x*delta-delta/8,originY-y*delta-delta/8,delta/4,delta/4);
+    }
+
+    public void plotOrigin(Graphics G)
+    {
+        G.setColor(foreground);
+        G.fillOval(originX, originY, 10, 10);
+    }
+
+    public void makeGrid(Graphics G)
+    {
+        int yCoord=0;
+        for(int i=originX;i<originX*2+width;i+=delta)
+        {
+            G.setColor(foreground);
+            G.drawLine(i,originY*2-height,i,originY*2+height);
+            if(delta>30 && i!=originX)
+            {
+                G.drawString(String.valueOf(-1 * yCoord), i - 15, originY+15);
+                
+            }
+            yCoord++;
+        }
+        yCoord=0;
+        for(int i=originX;i>originX*2-width;i-=delta)
+        {
+            G.setColor(foreground);
+            G.drawLine(i,originY*2-height,i,originY*2+height);
+            if(delta>30 && i!=originX)
+            {
+                G.drawString(String.valueOf(-1 * yCoord), i - 15, originY+15);
+                
+            }
+            yCoord--;
+        }
+    
+        int xCoord=0;
+        for(int i=originY;i<originY*2+height;i+=delta)
+        {
+            G.setColor(foreground);
+            G.drawLine(originX*2 - width,i,originX*2+width,i);
+            if(delta>30 && i!=originY)
+            {
+                G.drawString(String.valueOf(-1 * xCoord), originX+10, i + 15);
+            }
+            xCoord++;
+            
+        }
+        xCoord=0;
+        for(int i=originY;i>originY*2-height;i-=delta)
+        {
+            G.setColor(foreground);
+            G.drawLine(originX*2 - width,i,originX*2+width,i);
+            if(delta>30 && i!=originY)
+            {
+                G.drawString(String.valueOf(-1 * xCoord), originX+10, i + 15);
+            }
+            xCoord--;
+        }
+    
+        Color c = new Color(0,153,0);
+        G.setColor(c);
+        G.drawRect(originX-1,1,2,height);
+        G.drawRect(1,originY-1,width,2);
+        G.drawLine(originX,originY*2-getHeight(),originX,originY*2+getHeight());
+        G.drawLine(originX*2-getWidth(),originY,originX*2+getWidth(),originY);
+        G.setColor(Color.BLUE);
+        G.fillOval(originX-delta/4,originY-delta/4,delta/2,delta/2);
+        G.setColor(Color.black);
+        if(delta!=10)
+            G.drawString("(0,0)",originX+delta/4,originY+delta/4);
+    }
+    
+
     protected void paintComponent(Graphics G) 
     {
         super.paintComponent(G);
         int x, y, x2, y2;
 
-        int height = getHeight();
-        int width  = getWidth();
+        height = getHeight();
+        width  = getWidth();
 
         ins = getInsets();
 
         originX = (width - ins.left - ins.right)/2;
         originY = (height - ins.top - ins.bottom)/2;
-
-        Color background = new Color(86,86,86);
-        Color foreground = new Color(42,43,43);
         
         setBackground(background);
-        G.setColor(foreground);
-        G.drawOval(originX, originY, 10, 10);
+        makeGrid(G);
+        plotOrigin(G);
     }
 }
 
