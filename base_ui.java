@@ -93,6 +93,7 @@ class WorkBench extends JPanel {
         }
     
         G.setColor(dark_lines);
+        G.fillRect(originX,originY, 3, height/2);
         G.drawLine(originX+2,originY*2-getHeight(),originX+2,originY*2+getHeight());
         G.drawLine(originX-1,originY*2-getHeight(),originX-1,originY*2+getHeight());
         G.drawLine(originX,originY*2-getHeight(),originX,originY*2+getHeight());
