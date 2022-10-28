@@ -3,7 +3,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 
-class WorkBench extends JPanel {
+class WorkBench extends JPanel
+implements MouseWheelListener {
 
     public int originX = 0;
     public int originY = 0;
@@ -44,7 +45,9 @@ class WorkBench extends JPanel {
     public void makeGrid(Graphics G)
     {
         int yCoord=0;
-        for(int i=originX;i<originX*2+width;i+=delta)
+
+        //Lines towards the right half
+        for(int i=originX;i<originX*2+width - ins.right;i+=delta)
         {
             G.setColor(foreground);
             G.drawLine(i,originY*2-height,i,originY*2+height);
@@ -56,7 +59,9 @@ class WorkBench extends JPanel {
             yCoord++;
         }
         yCoord=0;
-        for(int i=originX;i>originX*2-width;i-=delta)
+
+        // Lines towards the left half
+        for(int i=originX;i>originX*2-width - ins.left;i-=delta)
         {
             G.setColor(foreground);
             G.drawLine(i,originY*2-height,i,originY*2+height);
@@ -67,9 +72,10 @@ class WorkBench extends JPanel {
             }
             yCoord--;
         }
-    
+        
+        // Lines towards the top half
         int xCoord=0;
-        for(int i=originY;i<originY*2+height;i+=delta)
+        for(int i=originY;i<originY*2+height-ins.top;i+=delta)
         {
             G.setColor(foreground);
             G.drawLine(originX*2 - width,i,originX*2+width,i);
@@ -80,8 +86,10 @@ class WorkBench extends JPanel {
             xCoord++;
             
         }
+
+        // Lines towards the bottom half
         xCoord=0;
-        for(int i=originY;i>originY*2-height;i-=delta)
+        for(int i=originY;i>originY*2-height-ins.bottom;i-=delta)
         {
             G.setColor(foreground);
             G.drawLine(originX*2 - width,i,originX*2+width,i);
@@ -93,11 +101,7 @@ class WorkBench extends JPanel {
         }
     
         G.setColor(dark_lines);
-        G.fillRect(originX,originY, 3, height/2);
-        G.drawLine(originX+2,originY*2-getHeight(),originX+2,originY*2+getHeight());
-        G.drawLine(originX-1,originY*2-getHeight(),originX-1,originY*2+getHeight());
-        G.drawLine(originX,originY*2-getHeight(),originX,originY*2+getHeight());
-        G.drawLine(originX*2-getWidth(),originY,originX*2+getWidth(),originY);
+        
         //G.setColor(Color.BLUE);
         //G.fillOval(originX-delta/4,originY-delta/4,delta/2,delta/2);
         G.setColor(foreground);
@@ -123,6 +127,19 @@ class WorkBench extends JPanel {
         makeGrid(G);
         plotOrigin(G);
     }
+
+    public void mouseWheelMoved(MouseWheelEvent e) 
+    {
+        int notches = e.getWheelRotation();
+        if (notches < 0) {
+        delta = delta + 10;
+        delta = delta > 150 ? 150 : delta;
+        } else {
+        delta = delta - 10;
+        delta = delta < 5 ? 5 : delta;
+        }
+        repaint();
+  } 
 }
 
 class Base_UI {
