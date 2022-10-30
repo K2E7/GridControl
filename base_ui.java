@@ -52,7 +52,7 @@ implements MouseWheelListener {
     public void plotOrigin(Graphics G)
     {
         G.setColor(background);
-        G.fillOval(originX, originY, 10, 10);
+        G.fillOval(originX-5*delta, originY-5*delta, 10*delta, 10*delta);
     }
 
     public void makeGrid(Graphics G)
