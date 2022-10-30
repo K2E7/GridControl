@@ -21,7 +21,7 @@ implements MouseWheelListener {
     
     WorkBench()
     {
-       
+       addMouseWheelListener(this);
     }
 
     public void plotpoint(int x, int y, Graphics G)
@@ -38,7 +38,7 @@ implements MouseWheelListener {
 
     public void plotOrigin(Graphics G)
     {
-        G.setColor(foreground);
+        G.setColor(background);
         G.fillOval(originX, originY, 10, 10);
     }
 
@@ -49,7 +49,7 @@ implements MouseWheelListener {
         //Lines towards the right half
         for(int i=originX;i<originX*2+width - ins.right;i+=delta)
         {
-            G.setColor(foreground);
+            G.setColor(background);
             G.drawLine(i,originY*2-height,i,originY*2+height);
             if(delta>30 && i!=originX)
             {
@@ -63,7 +63,7 @@ implements MouseWheelListener {
         // Lines towards the left half
         for(int i=originX;i>originX*2-width - ins.left;i-=delta)
         {
-            G.setColor(foreground);
+            G.setColor(background);
             G.drawLine(i,originY*2-height,i,originY*2+height);
             if(delta>30 && i!=originX)
             {
@@ -77,7 +77,7 @@ implements MouseWheelListener {
         int xCoord=0;
         for(int i=originY;i<originY*2+height-ins.top;i+=delta)
         {
-            G.setColor(foreground);
+            G.setColor(background);
             G.drawLine(originX*2 - width,i,originX*2+width,i);
             if(delta>30 && i!=originY)
             {
@@ -91,7 +91,7 @@ implements MouseWheelListener {
         xCoord=0;
         for(int i=originY;i>originY*2-height-ins.bottom;i-=delta)
         {
-            G.setColor(foreground);
+            G.setColor(background);
             G.drawLine(originX*2 - width,i,originX*2+width,i);
             if(delta>30 && i!=originY)
             {
@@ -104,7 +104,7 @@ implements MouseWheelListener {
         
         //G.setColor(Color.BLUE);
         //G.fillOval(originX-delta/4,originY-delta/4,delta/2,delta/2);
-        G.setColor(foreground);
+        G.setColor(background);
         if(delta!=10)
             G.drawString("(0,0)",originX+delta/4,originY+delta/4);
     }
@@ -123,9 +123,12 @@ implements MouseWheelListener {
         originX = (width - ins.left - ins.right)/2;
         originY = (height - ins.top - ins.bottom)/2;
         
-        setBackground(background);
+        setBackground(foreground);
         makeGrid(G);
         plotOrigin(G);
+
+        G.setColor(Color.CYAN);
+        plotpoint(0,0, G);
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) 
