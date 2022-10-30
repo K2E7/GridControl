@@ -1,10 +1,16 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.*;
+//import java.util.*;
 
 class WorkBench extends JPanel
 implements MouseWheelListener {
+
+    JButton zoomIN;
+    JButton zoomOUT;
+
+    ImageIcon in = createImageIcon("images/zoomin.png","Zoom In");
+    ImageIcon out = createImageIcon("images/zoomout.png","Zoom In");
 
     public int originX = 0;
     public int originY = 0;
@@ -22,6 +28,12 @@ implements MouseWheelListener {
     WorkBench()
     {
        addMouseWheelListener(this);
+       zoomIN = new JButton(in);
+       zoomOUT = new JButton(out);
+    }
+
+    private ImageIcon createImageIcon(String string, String string2) {
+        return null;
     }
 
     public void plotpoint(int x, int y, Graphics G)
@@ -46,6 +58,8 @@ implements MouseWheelListener {
     {
         int yCoord=0;
 
+        G.setFont(new Font("monospace",Font.BOLD, delta/6));
+
         //Lines towards the right half
         for(int i=originX;i<originX*2+width - ins.right;i+=delta)
         {
@@ -53,7 +67,7 @@ implements MouseWheelListener {
             G.drawLine(i,originY*2-height,i,originY*2+height);
             if(delta>30 && i!=originX)
             {
-                G.drawString(String.valueOf(-1 * yCoord), i - 15, originY+15);
+                G.drawString(String.valueOf(yCoord), i-delta/6, originY+delta/6);
                 
             }
             yCoord++;
@@ -67,13 +81,13 @@ implements MouseWheelListener {
             G.drawLine(i,originY*2-height,i,originY*2+height);
             if(delta>30 && i!=originX)
             {
-                G.drawString(String.valueOf(-1 * yCoord), i - 15, originY+15);
+                G.drawString(String.valueOf(yCoord), i+delta/12, originY+delta/6);
                 
             }
             yCoord--;
         }
         
-        // Lines towards the top half
+        // Lines towards the bottom half
         int xCoord=0;
         for(int i=originY;i<originY*2+height-ins.top;i+=delta)
         {
@@ -81,13 +95,13 @@ implements MouseWheelListener {
             G.drawLine(originX*2 - width,i,originX*2+width,i);
             if(delta>30 && i!=originY)
             {
-                G.drawString(String.valueOf(-1 * xCoord), originX+10, i + 15);
+                G.drawString(String.valueOf(-1 * xCoord), originX+delta/12, i + delta/6);
             }
             xCoord++;
             
         }
 
-        // Lines towards the bottom half
+        // Lines towards the top half
         xCoord=0;
         for(int i=originY;i>originY*2-height-ins.bottom;i-=delta)
         {
@@ -95,7 +109,7 @@ implements MouseWheelListener {
             G.drawLine(originX*2 - width,i,originX*2+width,i);
             if(delta>30 && i!=originY)
             {
-                G.drawString(String.valueOf(-1 * xCoord), originX+10, i + 15);
+                G.drawString(String.valueOf(-1 * xCoord), originX+delta/6, i + delta/6);
             }
             xCoord--;
         }
@@ -125,10 +139,14 @@ implements MouseWheelListener {
         
         setBackground(foreground);
         makeGrid(G);
-        plotOrigin(G);
 
         G.setColor(Color.CYAN);
         plotpoint(0,0, G);
+
+        plotOrigin(G);
+
+        G.setColor(Color.green);
+        plotpoint(originX+1, originY+1, G);
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) 
