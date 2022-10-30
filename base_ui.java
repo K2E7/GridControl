@@ -10,7 +10,7 @@ implements MouseWheelListener {
     JButton zoomOUT;
 
     ImageIcon in = createImageIcon("images/zoomin.png","Zoom In");
-    ImageIcon out = createImageIcon("images/zoomout.png","Zoom In");
+    ImageIcon out = createImageIcon("images/zoomout.png","Zoom Out");
 
     public int originX = 0;
     public int originY = 0;
@@ -30,6 +30,11 @@ implements MouseWheelListener {
        addMouseWheelListener(this);
        zoomIN = new JButton(in);
        zoomOUT = new JButton(out);
+       zoomIN.setBounds(50,100,95,30); 
+       zoomOUT.setBounds(150,150,95,30);   
+
+       add(zoomIN);
+       add(zoomOUT);
     }
 
     private ImageIcon createImageIcon(String string, String string2) {
