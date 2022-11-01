@@ -112,7 +112,7 @@ class WorkBench extends JPanel
 
         G.setColor(Color.green);
 
-        std.plotTriangle(0,0,5,5,10,2,90,G);     
+        std.plotTriangle(0, 0, 5, 5, 10, 2, 90, G);
     }
 
     // driving the zooming using Mouse Wheel movement
