@@ -1,16 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-//import java.util.*;
 
+// Class that contains all the drawing elements.
 class WorkBench extends JPanel
 implements MouseWheelListener {
 
     JButton zoomIN;
     JButton zoomOUT;
-
-    ImageIcon in = new ImageIcon("images/zoomin.png","Zoom In");
-    ImageIcon out = new ImageIcon("images/zoomout.png","Zoom Out");
 
     public int originX = 0;
     public int originY = 0;
@@ -21,40 +18,41 @@ implements MouseWheelListener {
     Color background = new Color(32,33,36);
     Color foreground = new Color(61,64,67);
     Color dark_lines = new Color(14,15,16);
- //  LIGHT+GRAY = "#565656", DARK+GRAY = "#2a2b2b" 
 
     Insets ins;
     
     WorkBench()
     {
        addMouseWheelListener(this);
-       zoomIN = new JButton(in);
-       zoomOUT = new JButton(out);
-       zoomIN.setBounds(50,100,95,75); 
-       zoomOUT.setBounds(150,150,95,30);   
+       zoomIN = new JButton("Zoom In");
+       zoomOUT = new JButton("Zoom Out");  
 
        add(zoomIN);
        add(zoomOUT);
     }
 
+    // plots a point with a settable color.
     public void plotpoint(int x, int y, Graphics G)
     {
         G.fillRect(originX + x*delta - delta/8, originY - y*delta - delta/8, delta/4, delta/4);
         //G.fillOval(originX+x*delta-delta/8,originY-y*delta-delta/8,delta/4,delta/4);
     }
 
+    // plots a point with variable width...
     public void var_plotpoint(int x, int y, int px, Graphics G)
     {
         G.fillRect(originX + x*delta - delta/8, originY - y*delta - delta/8, px*delta/4, px*delta/4);
         //G.fillOval(originX+x*delta-delta/8,originY-y*delta-delta/8,delta/4,delta/4);
     }
 
+    //plots origin in a preset color and non-modifiable variable size.
     public void plotOrigin(Graphics G)
     {
         G.setColor(background);
         G.fillOval(originX-delta/2, originY-delta/2, delta, delta);
     }
 
+    // Just plots the grid and labelling for the grid.
     public void makeGrid(Graphics G)
     {
         int yCoord=0;
@@ -115,13 +113,9 @@ implements MouseWheelListener {
             xCoord--;
         }
     
-        G.setColor(dark_lines);
-        
-        //G.setColor(Color.BLUE);
-        //G.fillOval(originX-delta/4,originY-delta/4,delta/2,delta/2);
         G.setColor(background);
         if(delta!=10)
-            G.drawString("(0,0)",originX+delta/4,originY+delta/4);
+            G.drawString("(0,0)",originX+delta/2,originY+delta/2);
     }
     
 
@@ -150,6 +144,7 @@ implements MouseWheelListener {
         plotpoint(originX+1, originY+1, G);
     }
 
+    // driving the zooming using Mouse Wheel movement
     public void mouseWheelMoved(MouseWheelEvent e) 
     {
         int notches = e.getWheelRotation();
@@ -164,6 +159,8 @@ implements MouseWheelListener {
   } 
 }
 
+
+// Class where the UI is organized and managed.
 class Base_UI {
 
     JLabel    jlab;
