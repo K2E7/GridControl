@@ -1,12 +1,11 @@
 public class RotationalTransforms {
     int ox, oy, angle;
 
-    public RotationalTransforms(int ox,int oy,int angle)
-        {
-            this.ox=ox;
-            this.oy=oy;
-            this.angle=angle;
-        }
+    public RotationalTransforms(int ox, int oy, int angle) {
+        this.ox = ox;
+        this.oy = oy;
+        this.angle = angle;
+    }
 
     public int rotateX(int x, int y) {
         double angle = Math.PI / 180 * this.angle;
