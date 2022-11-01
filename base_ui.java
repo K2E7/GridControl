@@ -134,8 +134,9 @@ class WorkBench extends JPanel
         G.setColor(Color.green);
         // plotpoint(originX + 1, originY + 1, G);
 
-        std.plotEllipse(15, 15, 0, 0, G);
-        std.plotLine(0, 0, 15, 15, G);
+        std.plotEllipse(15, 30, 0, 0, G);
+        std.plotEllipse(15, 30, 0, 0, 90, G);
+        //std.plotLine(0, 0, 15, 15, G);
         // std.plotTriangle(3, -4, -3, -4, 0, 5, G);
         // std.plotQuad(6, 6, 6, -6, -6, -6, -6, 6, G);
     }
@@ -170,17 +171,18 @@ class WorkBench extends JPanel
 // Class where all the Shape Drawing and plotting algorithms are stored.
 class StdDrawing extends WorkBench {
     // plots an Ellipse using Midpoint Ellipse Drawing Algorithm.
-    public void plotEllipse(int a, int b, int xc, int yc, Graphics G) {
+    public void plotEllipse(int a, int b, int xc, int yc, int deg, Graphics G) {
+        RotationalTransforms rot = new RotationalTransforms(xc, yc, deg);
         double d2;
 
         int x = 0;
         int y = b;
 
         double d1 = b * b - a * a * b + 0.25 * a * a;
-        plotpoint((int) (x + xc), (int) (y + yc), G);
-        plotpoint((int) (-x + xc), (int) (y + yc), G);
-        plotpoint((int) (x + xc), (int) (-y + yc), G);
-        plotpoint((int) (-x + xc), (int) (-y + yc), G);
+        plotpoint((int)rot.rotateX(x  + xc, y  + yc),(int)rot.rotateY(x  + xc, y  + yc),G);
+        plotpoint((int)rot.rotateX(-x + xc, y  + yc),(int)rot.rotateY(-x + xc, y  + yc),G);
+        plotpoint((int)rot.rotateX(x  + xc, -y + yc),(int)rot.rotateY(x  + xc, -y + yc),G);
+        plotpoint((int)rot.rotateX(-x + xc, -y + yc),(int)rot.rotateY(-x + xc, -y + yc),G);
 
         while (a * a * (y - 0.5) > b * b * (x + 1)) {
             if (d1 < 0) {
@@ -190,10 +192,10 @@ class StdDrawing extends WorkBench {
                 y--;
             }
             x++;
-            plotpoint((int) (x + xc), (int) (y + yc), G);
-            plotpoint((int) (-x + xc), (int) (y + yc), G);
-            plotpoint((int) (x + xc), (int) (-y + yc), G);
-            plotpoint((int) (-x + xc), (int) (-y + yc), G);
+            plotpoint((int)rot.rotateX(x  + xc, y  + yc),(int)rot.rotateY(x  + xc, y  + yc),G);
+            plotpoint((int)rot.rotateX(-x + xc, y  + yc),(int)rot.rotateY(-x + xc, y  + yc),G);
+            plotpoint((int)rot.rotateX(x  + xc, -y + yc),(int)rot.rotateY(x  + xc, -y + yc),G);
+            plotpoint((int)rot.rotateX(-x + xc, -y + yc),(int)rot.rotateY(-x + xc, -y + yc),G);
         } // Region 1 //
 
         d2 = b * b * (x + 0.5) * (x + 0.5) + a * a * (y - 1) * (y - 1) - a * a * b * b;
@@ -204,12 +206,16 @@ class StdDrawing extends WorkBench {
             } else
                 d2 += a * a * (-2 * y + 3);
             y--;
-            plotpoint((int) (x + xc), (int) (y + yc), G);
-            plotpoint((int) (-x + xc), (int) (y + yc), G);
-            plotpoint((int) (x + xc), (int) (-y + yc), G);
-            plotpoint((int) (-x + xc), (int) (-y + yc), G);
+            plotpoint((int)rot.rotateX(x  + xc, y  + yc),(int)rot.rotateY(x  + xc, y  + yc),G);
+            plotpoint((int)rot.rotateX(-x + xc, y  + yc),(int)rot.rotateY(-x + xc, y  + yc),G);
+            plotpoint((int)rot.rotateX(x  + xc, -y + yc),(int)rot.rotateY(x  + xc, -y + yc),G);
+            plotpoint((int)rot.rotateX(-x + xc, -y + yc),(int)rot.rotateY(-x + xc, -y + yc),G);
         } // Region 2 //
 
+    }
+    // Using degree = 0 if not mentioned.
+    public void plotEllipse(int a, int b, int xc, int yc, Graphics G) {
+        plotEllipse(a, b, xc, yc, 0, G);
     }
 
     // plots a Line using Midpoint Line Drawing Algorithm.
