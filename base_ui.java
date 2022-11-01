@@ -9,11 +9,11 @@ class WorkBench extends JPanel
     JButton zoomIN;
     JButton zoomOUT;
 
-    public int originX = 0;
-    public int originY = 0;
-    public int delta = 8;
-    public int height = 0;
-    public int width = 0;
+    public static int originX = 0;
+    public static int originY = 0;
+    public static int delta = 8;
+    public static int height = 0;
+    public static int width = 0;
 
     Color background = new Color(32, 33, 36);
     Color foreground = new Color(61, 64, 67);
@@ -36,7 +36,7 @@ class WorkBench extends JPanel
 
     // plots a point with a settable color.
     public void plotpoint(int x, int y, Graphics G) {
-        G.fillRect(originX + x * delta - delta / 2, originY - y * delta - delta / 2, delta , delta );
+        G.fillRect(originX + x * delta - delta / 2, originY - y * delta - delta / 2, delta, delta);
         // G.fillOval(originX+x*delta-delta/8,originY-y*delta-delta/8,delta/4,delta/4);
     }
 
@@ -109,55 +109,9 @@ class WorkBench extends JPanel
             G.drawString("(0,0)", originX + delta / 2, originY + delta / 2);
     }
 
-    // plots an Ellipse using Midpoint Ellipse Drawing Algorithm.
-    public void plotEllipse(int a, int b, int xc, int yc, Graphics G) {
-        double d2;
-
-        int x=0;
-        int y=b;
-
-        double d1 = b*b - a*a*b + 0.25*a*a;
-        plotpoint((int)(x + xc),(int)(y + yc),G);
-        plotpoint((int)(-x + xc),(int)(y + yc),G);
-        plotpoint((int)(x + xc),(int)(-y + yc),G);
-        plotpoint((int)(-x + xc),(int)(-y + yc),G);
-
-        while(a*a*(y-0.5) > b*b*(x+1)) {
-            if(d1<0) {
-                d1 += b*b*(2*x+3);
-            }
-            else {
-                d1 += b*b*(2*x+3) + a*a*(-2*y+2);
-                y--;
-            }
-            x++;
-            plotpoint((int)(x + xc),(int)(y + yc),G);
-            plotpoint((int)(-x + xc),(int)(y + yc),G);
-            plotpoint((int)(x + xc),(int)(-y + yc),G);
-            plotpoint((int)(-x + xc),(int)(-y + yc),G);
-        } // Region 1 //
-
-        d2 = b*b*(x+0.5)*(x+0.5) + a*a*(y-1)*(y-1) - a*a*b*b;
-        while(y>0) {
-            if (d2<0) {
-                d2 += b*b*(2*x+2) + a*a*(-2*y+3);
-                x++;
-            }
-            else
-                d2 += a*a*(-2*y+3);
-            y--;
-            plotpoint((int)(x + xc),(int)(y + yc),G);
-            plotpoint((int)(-x + xc),(int)(y + yc),G);
-            plotpoint((int)(x + xc),(int)(-y + yc),G);
-            plotpoint((int)(-x + xc),(int)(-y + yc),G);
-        } // Region 2 //
-
-    }
-
-    //public void setEllipse()
     protected void paintComponent(Graphics G) {
         super.paintComponent(G);
-        // int x, y, x2, y2;
+        StdDrawing std = new StdDrawing();
 
         height = getHeight();
         width = getWidth();
@@ -178,9 +132,10 @@ class WorkBench extends JPanel
         plotOrigin(G);
 
         G.setColor(Color.green);
-        plotpoint(originX + 1, originY + 1, G);
+        // plotpoint(originX + 1, originY + 1, G);
 
-        plotEllipse(15, 15, 0, 0, G);
+        std.plotEllipse(15, 15, 0, 0, G);
+        std.plotLine(0, 0, 15, 15, G);
     }
 
     // driving the zooming using Mouse Wheel movement
@@ -207,6 +162,94 @@ class WorkBench extends JPanel
             delta = delta < 1 ? 1 : delta;
         }
         repaint();
+    }
+}
+
+// Class where all the Shape Drawing and plotting algorithms are stored.
+class StdDrawing extends WorkBench {
+    // plots an Ellipse using Midpoint Ellipse Drawing Algorithm.
+    public void plotEllipse(int a, int b, int xc, int yc, Graphics G) {
+        double d2;
+
+        int x = 0;
+        int y = b;
+
+        double d1 = b * b - a * a * b + 0.25 * a * a;
+        plotpoint((int) (x + xc), (int) (y + yc), G);
+        plotpoint((int) (-x + xc), (int) (y + yc), G);
+        plotpoint((int) (x + xc), (int) (-y + yc), G);
+        plotpoint((int) (-x + xc), (int) (-y + yc), G);
+
+        while (a * a * (y - 0.5) > b * b * (x + 1)) {
+            if (d1 < 0) {
+                d1 += b * b * (2 * x + 3);
+            } else {
+                d1 += b * b * (2 * x + 3) + a * a * (-2 * y + 2);
+                y--;
+            }
+            x++;
+            plotpoint((int) (x + xc), (int) (y + yc), G);
+            plotpoint((int) (-x + xc), (int) (y + yc), G);
+            plotpoint((int) (x + xc), (int) (-y + yc), G);
+            plotpoint((int) (-x + xc), (int) (-y + yc), G);
+        } // Region 1 //
+
+        d2 = b * b * (x + 0.5) * (x + 0.5) + a * a * (y - 1) * (y - 1) - a * a * b * b;
+        while (y > 0) {
+            if (d2 < 0) {
+                d2 += b * b * (2 * x + 2) + a * a * (-2 * y + 3);
+                x++;
+            } else
+                d2 += a * a * (-2 * y + 3);
+            y--;
+            plotpoint((int) (x + xc), (int) (y + yc), G);
+            plotpoint((int) (-x + xc), (int) (y + yc), G);
+            plotpoint((int) (x + xc), (int) (-y + yc), G);
+            plotpoint((int) (-x + xc), (int) (-y + yc), G);
+        } // Region 2 //
+
+    }
+
+    // plots a Line using Midpoint Line Drawing Algorithm.
+    public void plotLine(int x0, int y0, int x1, int y1, Graphics G) {
+
+        int dx = x1 - x0;
+        int dy = y1 - y0;
+        int d = dy - dx / 2;
+
+        int incrE = dy;
+        int incrNE = (dy - dx);
+
+        int x = x0;
+        int y = y0;
+        plotpoint(x, y, G);
+
+        while (x < x1) {
+            if (d <= 0) {
+                d += incrE;
+            } else {
+                d += incrNE;
+                y++;
+            }
+            x++;
+            plotpoint(x, y, G);
+        }
+    } // MidPoint Line //
+
+    // plots a Triangle using plotLines.
+    public void plotTriangle(int x0, int y0, int x1, int y1, int x2, int y2, Graphics G) {
+        plotLine(x0,y0,x1,y1,G);
+        plotLine(x1,y1,x2,y2,G);
+        plotLine(x2,y2,x0,y0,G);
+    }
+
+    // plots a Quadrilateral using plotLines.
+    public void plotQuad(int x0, int y0, int x1, int y1, int x2, int y2, int x3 , int y3, Graphics G)
+    {
+        plotLine(x0,y0,x1,y1,G);
+        plotLine(x1,y1,x2,y2,G);
+        plotLine(x2,y2,x3,y3,G);
+        plotLine(x3,y3,x0,y0,G);
     }
 }
 
