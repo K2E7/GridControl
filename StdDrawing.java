@@ -88,30 +88,38 @@ public class StdDrawing extends WorkBench {
 
         int dx = x_1 - x_0;
         int dy = y_1 - y_0;
-        
-        int d = dy - dx / 2;
 
-        int incrE = dy;
-        int incrNE = (dy - dx);
+        int total_steps = Math.max(Math.abs(dx),Math.abs(dy));
 
-        int x = x_0;
-        int y = y_0;
-        G.setColor(Color.RED);
-        plotpoint((int) rot.rotateX(x, y), (int) rot.rotateY(x, y), G);
+        float x_incr = (float) dx / total_steps;
+        float y_incr = (float) dy / total_steps;
+        float x = x_0;
+        float y = y_0;
 
-        while (x < x_1) {
-            if (d <= 0) {
-                d += incrE;
-            } else {
-                d += incrNE;
-                y++;
-            }
-            x++;
-            plotpoint((int) rot.rotateX(x, y), (int) rot.rotateY(x, y), G);
-        }
+        for(int i=0; i<= total_steps; i++) {
+            plotpoint((int)rot.rotateX((int)x,(int)y),(int)rot.rotateY((int)x,(int)y),G);
+            x+=x_incr;
+            y+=y_incr;
+        } 
     }
-
+    // plot the default line with degree 0
     public void plotLine(int x0, int y0, int x1, int y1, Graphics G) {
         plotLine(x0, y0, x1, y1, 0, G);
+    }
+
+    // plots a triangle using plotLines with added rotational support
+    public void plotTriangle(int x0, int y0, int x1, int y1, int x2, int y2, int deg, Graphics G) {
+
+        int centroid_x = (x0+x1+x2)/3;
+        int centroid_y = (y0+y1+y2)/3;
+
+        RotationalTransforms rot = new RotationalTransforms(centroid_x, centroid_y, deg);
+        plotLine(rot.rotateX(x0, y0),rot.rotateY(x0,y0),rot.rotateX(x1, y1),rot.rotateY(x1,y1), G);
+        plotLine(rot.rotateX(x1, y1),rot.rotateY(x1,y1),rot.rotateX(x2, y2),rot.rotateY(x2,y2), G);
+        plotLine(rot.rotateX(x2, y2),rot.rotateY(x2,y2),rot.rotateX(x0, y0),rot.rotateY(x0,y0), G);
+    }
+    // plots a triangle with default deg=0
+    public void plotTriangle(int x0, int y0, int x1, int y1, int x2, int y2, Graphics G) {
+        plotTriangle(x0, y0, x1, y1, x2, y2, 0, G);
     }
 }

@@ -34,9 +34,6 @@ class WorkBench extends JPanel
         zoomOUT.setActionCommand("Zoomed Out");
     }
 
-    // plots a point with a settable color.
-    
-
     // Just plots the grid and labelling for the grid.
     public void makeGrid(Graphics G) {
         int yCoord = 0;
@@ -114,7 +111,8 @@ class WorkBench extends JPanel
         std.plotOrigin(G);
 
         G.setColor(Color.green);
-           
+
+        std.plotTriangle(0,0,5,5,10,2,90,G);     
     }
 
     // driving the zooming using Mouse Wheel movement
