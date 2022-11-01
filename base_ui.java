@@ -35,22 +35,7 @@ class WorkBench extends JPanel
     }
 
     // plots a point with a settable color.
-    public void plotpoint(int x, int y, Graphics G) {
-        G.fillRect(originX + x * delta - delta / 2, originY - y * delta - delta / 2, delta, delta);
-        // G.fillOval(originX+x*delta-delta/8,originY-y*delta-delta/8,delta/4,delta/4);
-    }
-
-    // plots a point with variable width...
-    public void var_plotpoint(int x, int y, int px, Graphics G) {
-        G.fillRect(originX + x * delta - delta / 8, originY - y * delta - delta / 8, px * delta / 4, px * delta / 4);
-        // G.fillOval(originX+x*delta-delta/8,originY-y*delta-delta/8,delta/4,delta/4);
-    }
-
-    // plots origin in a preset color and non-modifiable variable size.
-    public void plotOrigin(Graphics G) {
-        G.setColor(background);
-        G.fillOval(originX - delta / 2, originY - delta / 2, delta, delta);
-    }
+    
 
     // Just plots the grid and labelling for the grid.
     public void makeGrid(Graphics G) {
@@ -126,16 +111,10 @@ class WorkBench extends JPanel
         if (delta > 5)
             makeGrid(G);
 
-        G.setColor(Color.CYAN);
-        plotpoint(0, 0, G);
-
-        plotOrigin(G);
+        std.plotOrigin(G);
 
         G.setColor(Color.green);
-        // plotpoint(originX + 1, originY + 1, G);
-
-        std.plotEllipse(15, 30, 0, 0, G);
-        std.plotEllipse(15, 30, 0, 0, 90, G);
+           
     }
 
     // driving the zooming using Mouse Wheel movement
