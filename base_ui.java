@@ -238,18 +238,17 @@ class StdDrawing extends WorkBench {
 
     // plots a Triangle using plotLines.
     public void plotTriangle(int x0, int y0, int x1, int y1, int x2, int y2, Graphics G) {
-        plotLine(x0,y0,x1,y1,G);
-        plotLine(x1,y1,x2,y2,G);
-        plotLine(x2,y2,x0,y0,G);
+        plotLine(x0, y0, x1, y1, G);
+        plotLine(x1, y1, x2, y2, G);
+        plotLine(x2, y2, x0, y0, G);
     }
 
     // plots a Quadrilateral using plotLines.
-    public void plotQuad(int x0, int y0, int x1, int y1, int x2, int y2, int x3 , int y3, Graphics G)
-    {
-        plotLine(x0,y0,x1,y1,G);
-        plotLine(x1,y1,x2,y2,G);
-        plotLine(x2,y2,x3,y3,G);
-        plotLine(x3,y3,x0,y0,G);
+    public void plotQuad(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, Graphics G) {
+        plotLine(x0, y0, x1, y1, G);
+        plotLine(x1, y1, x2, y2, G);
+        plotLine(x2, y2, x3, y3, G);
+        plotLine(x3, y3, x0, y0, G);
     }
 }
 
