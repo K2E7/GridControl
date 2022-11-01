@@ -1,9 +1,5 @@
 import java.awt.*;
-import javax.swing.*;
-
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.ThreadLocalRandom.*;
 
 enum HairType {
     HAIRLESS, HAIRY;
