@@ -1,6 +1,83 @@
 import java.awt.*;
+
 // Class where all the Shape Drawing and plotting algorithms are stored.
 public class StdDrawing extends WorkBench {
+
+    // plots a point with a settable color.
+    public void plotpoint(int x, int y, Graphics G) {
+        G.fillRect(originX + x * delta - delta / 2, originY - y * delta - delta / 2, delta, delta);
+        // G.fillOval(originX+x*delta-delta/8,originY-y*delta-delta/8,delta/4,delta/4);
+    }
+
+    // plots a point with variable width...
+    public void var_plotpoint(int x, int y, int px, Graphics G) {
+        G.fillRect(originX + x * delta - delta / 8, originY - y * delta - delta / 8, px * delta / 4, px * delta / 4);
+        // G.fillOval(originX+x*delta-delta/8,originY-y*delta-delta/8,delta/4,delta/4);
+    }
+
+    // plots origin in a preset color and non-modifiable variable size.
+    public void plotOrigin(Graphics G) {
+        G.setColor(background);
+        G.fillOval(originX - delta / 2, originY - delta / 2, delta, delta);
+    }
+
+    // Just plots the grid and labelling for the grid.
+    public void makeGrid(Graphics G) {
+        int yCoord = 0;
+
+        G.setFont(new Font("monospace", Font.BOLD, delta / 6));
+
+        // Lines towards the right half
+        for (int i = originX; i < originX * 2 + width - ins.right; i += delta) {
+            G.setColor(background);
+            G.drawLine(i, originY * 2 - height, i, originY * 2 + height);
+            if (delta > 30 && i != originX) {
+                G.drawString(String.valueOf(yCoord), i - delta / 6, originY + delta / 6);
+
+            }
+            yCoord++;
+        }
+        yCoord = 0;
+
+        // Lines towards the left half
+        for (int i = originX; i > originX * 2 - width - ins.left; i -= delta) {
+            G.setColor(background);
+            G.drawLine(i, originY * 2 - height, i, originY * 2 + height);
+            if (delta > 30 && i != originX) {
+                G.drawString(String.valueOf(yCoord), i + delta / 12, originY + delta / 6);
+
+            }
+            yCoord--;
+        }
+
+        // Lines towards the bottom half
+        int xCoord = 0;
+        for (int i = originY; i < originY * 2 + height - ins.top; i += delta) {
+            G.setColor(background);
+            G.drawLine(originX * 2 - width, i, originX * 2 + width, i);
+            if (delta > 30 && i != originY) {
+                G.drawString(String.valueOf(-1 * xCoord), originX + delta / 12, i + delta / 6);
+            }
+            xCoord++;
+
+        }
+
+        // Lines towards the top half
+        xCoord = 0;
+        for (int i = originY; i > originY * 2 - height - ins.bottom; i -= delta) {
+            G.setColor(background);
+            G.drawLine(originX * 2 - width, i, originX * 2 + width, i);
+            if (delta > 30 && i != originY) {
+                G.drawString(String.valueOf(-1 * xCoord), originX + delta / 6, i + delta / 6);
+            }
+            xCoord--;
+        }
+
+        G.setColor(background);
+        if (delta > 30)
+            G.drawString("(0,0)", originX + delta / 2, originY + delta / 2);
+    }
+
     // plots an Ellipse using Midpoint Ellipse Drawing Algorithm.
     public void plotEllipse(int a, int b, int xc, int yc, int deg, Graphics G) {
         RotationalTransforms rot = new RotationalTransforms(xc, yc, deg);
@@ -75,5 +152,4 @@ public class StdDrawing extends WorkBench {
             plotpoint(x, y, G);
         }
     } // MidPoint Line //
-
 }
