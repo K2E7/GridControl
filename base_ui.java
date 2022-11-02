@@ -25,7 +25,8 @@ class WorkBench extends JPanel
         addMouseWheelListener(this);
         zoomIN = new JButton("Zoom In");
         zoomOUT = new JButton("Zoom Out");
-
+        zoomIN.setBounds(0,0,20,20);
+        zoomOUT.setBounds(0,0,20,20);
         add(zoomIN);
         add(zoomOUT);
         zoomIN.addActionListener(this);
