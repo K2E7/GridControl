@@ -20,11 +20,10 @@ public class RotationalTransforms {
         return (int) py;
     }
 
-    public int getAngle()
-    {
+    public int getAngle() {
         return this.angle;
     }
-    
+
     public boolean setAngle(int angle) {
         if (angle < 0 || angle > 360)
             return false;
