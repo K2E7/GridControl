@@ -112,8 +112,14 @@ class WorkBench extends JPanel
         std.plotOrigin(G);
 
         G.setColor(Color.green);
+        int x1 = 10;
+        int y1 = 10;
+        int radius = 60;
+        RotationalTransforms rt = new RotationalTransforms(x1, y1 + radius, 35);
+        new Body(x1, y1, radius/2, radius, SpotType.SPOTTED, HairType.HAIRLESS, rt, G);
 
-        std.plotTriangle(0, 0, 5, 5, 10, 2, 90, G);
+
+        G.setColor(Color.yellow);
     }
 
     // driving the zooming using Mouse Wheel movement

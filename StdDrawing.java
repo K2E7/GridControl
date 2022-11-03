@@ -69,6 +69,11 @@ public class StdDrawing extends WorkBench {
         plotEllipse(a, b, xc, yc, 0, G);
     }
 
+    // plots a Circle based on Ellipse Drawing Algorithm
+    public void plotCircle(int r, int xc, int yc, Graphics G) {
+        plotEllipse(r, r, xc, yc, G);
+    }
+
     // plots a Line using Midpoint Line Drawing Algorithm
     public void plotLine(int x0, int y0, int x1, int y1, int deg, Graphics G) {
         int x_0, x_1, y_0, y_1;
