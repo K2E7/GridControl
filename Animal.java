@@ -209,7 +209,7 @@ class MovableParts {
         int c22y = p21 - ry2;
         lowerHalf = new Body(c22x, c22y, rx2, ry2, st, ht, rt2, G);
 
-        this.sz = sz;
+        //this.sz = sz;
         p21 -= 2 * ry2;
 
         int xp20 = p20;
