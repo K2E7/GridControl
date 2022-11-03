@@ -166,7 +166,7 @@ class OtherParts {
 
     public void tooth(int x1, int y1, int x2, int y2, int radius, int up, Graphics G) {
         // x1, y1 is smaller
-        // up=+1 or -1  `1q
+        // up=+1 or -1 `1q
         while (x1 <= x2) {
             obj.plotLine(x1, y1, x1, y1 + (int) ((radius / 10) * up), G);
             x1 = x1 + 5;
@@ -184,11 +184,11 @@ class OtherParts {
     }
 }
 
-class Animal {
+class MovableParts {
     Body upperHalf, lowerHalf, fist;
     Size sz;
 
-    public Animal(int topX, int topY, int width, int height, SpotType st,
+    public MovableParts(int topX, int topY, int width, int height, SpotType st,
             HairType ht, int angle0, int angle1, Graphics G) {
 
         int rx1 = (int) (0.8 * width);
