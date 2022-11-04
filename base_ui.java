@@ -9,6 +9,12 @@ class WorkBench extends JPanel
     JButton zoomIN;
     JButton zoomOUT;
 
+    static int parent1[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    static int parent2[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+
+    static int child[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    static int var[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
     public static int originX = 0;
     public static int originY = 0;
     public static int delta = 8;
@@ -18,6 +24,11 @@ class WorkBench extends JPanel
     Color background = new Color(32, 33, 36);
     Color foreground = new Color(61, 64, 67);
     Color dark_lines = new Color(14, 15, 16);
+
+    JButton b1 = new JButton("Triangle Tail");
+    JButton b2 = new JButton("Circular Tail");
+    JButton b3 = new JButton("Round Ears");
+    JButton b4 = new JButton("Triangular Ears");
 
     Insets ins;
 
@@ -33,6 +44,54 @@ class WorkBench extends JPanel
         zoomIN.setActionCommand("Zoomed In");
         zoomOUT.addActionListener(this);
         zoomOUT.setActionCommand("Zoomed Out");
+
+        b1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                parent1[8] = 1;
+                childset(parent1, parent2);
+                repaint();
+            }
+        });
+        b2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                parent1[8] = 0;
+                childset(parent1, parent2);
+                repaint();
+            }
+        });
+        b3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                parent1[2] = 1;
+                childset(parent1, parent2);
+                repaint();
+            }
+        });
+        b4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                parent1[2] = 0;
+                childset(parent1, parent2);
+                repaint();
+            }
+        });
+
+        b1.setBounds(30, 60, 100, 20);
+        b2.setBounds(140, 60, 100, 20);
+        b3.setBounds(30, 90, 100, 20);
+        b4.setBounds(140, 90, 100, 20);
+
+        add(b2);
+        add(b1);
+        add(b3);
+        add(b4);
+    }
+
+    public void childset(int arr[], int arr2[]) {
+        for (int i = 0; i < 9; i++) {
+            var[i] = ((int) (Math.random() * 100 + i)) % 2;
+        }
+        for (int i = 0; i < 9; i++) {
+            child[i] = var[i] * arr[i] + (1 - var[i]) * arr2[i];
+        }
     }
 
     // Just plots the grid and labelling for the grid.
@@ -95,7 +154,7 @@ class WorkBench extends JPanel
     protected void paintComponent(Graphics G) {
         super.paintComponent(G);
         StdDrawing std = new StdDrawing();
-        OtherParts op = new OtherParts();
+        Animal anim    = new Animal();
         height = getHeight();
         width = getWidth();
 
@@ -111,36 +170,11 @@ class WorkBench extends JPanel
 
         std.plotOrigin(G);
 
-        G.setColor(Color.green);
-        int x1 = 10;
-        int y1 = 10;
-        int radius = 60;
-        RotationalTransforms rt = new RotationalTransforms(x1, y1 + radius, 35);
-        new Body(x1, y1, radius / 2, radius, SpotType.SPOTTED, HairType.HAIRLESS, rt, G);
-        op.head(radius / 2, x1, y1 + 3 * radius / 2, 4, 2, G);
+        G.setColor(Color.white);
+        anim.plotanimal(-100,parent1, G);
+        anim.plotanimal(100, parent2, G);
+        anim.plotanimal(0, child, G);
 
-        int leg1px = rt.rotateX(x1, y1 - radius);
-        int leg1py = rt.rotateY(x1, y1 - radius);
-        int leg2px = rt.rotateX(x1 - 5, y1 - radius + 10);
-        int leg2py = rt.rotateY(x1 - 5, y1 - radius + 10);
-
-        G.setColor(Color.yellow);
-        new MovableParts(leg1px, leg1py, radius / 3, 3 * radius / 2, SpotType.SPOTTED, HairType.HAIRLESS, 0, 5, G);
-        new MovableParts(leg2px, leg2py, radius / 3, 3 * radius / 2, SpotType.SPOTTED, HairType.HAIRLESS, -20, 5, G);
-
-        int hand1px = rt.rotateX(x1 - radius / 2 + 10, y1 + radius / 2);
-        int hand1py = rt.rotateY(x1 - radius / 2 + 10, y1 + radius / 2);
-        int hand2px = rt.rotateX(x1 - radius / 2 + 10, y1 + radius / 2 + 10);
-        int hand2py = rt.rotateY(x1 - radius / 2 + 10, y1 + radius / 2 + 10);
-
-        new MovableParts(hand1px, hand1py, radius / 4, radius, SpotType.SPOTTED, HairType.HAIRLESS, -45, -90, G);
-        new MovableParts(hand2px, hand2py, radius / 4, radius, SpotType.SPOTTED, HairType.HAIRLESS, -75, -120, G);
-
-        int tailX = rt.rotateX(x1 + 17, y1 - radius);
-        int tailY = rt.rotateY(x1 + 17, y1 - radius);
-        rt.setPivot(tailX, tailY);
-        rt.setAngle(-10);
-        new Body(tailX, tailY, radius / 3, radius / 8, SpotType.SPOTLESS, HairType.HAIRY, rt, G);
     }
 
     // driving the zooming using Mouse Wheel movement
@@ -195,4 +229,252 @@ class Base_UI {
             }
         });
     }
+}
+
+class Animal extends WorkBench{
+
+    StdDrawing std = new StdDrawing();
+    public void plotanimal(int xr, int feat[], Graphics g) {
+        // Imaginary animal 1
+
+        // ears
+        if (feat[2] == 0) {
+            std.plotCircle(5, 10 + xr, 60, g);
+            std.plotCircle(5, 12 + xr, 58, g);
+        }
+        if (feat[2] == 1) {
+            std.plotTriangle1( 10, -10, 4 + xr, 60, 50, g);
+            std.plotTriangle1( 10, -10, 10 + xr, 54, 0, g);
+        }
+
+        // head
+        std.plotCircle(10, 0 + xr, 50, g);
+        std.plotCircle(2, -3 + xr, 50, g);
+
+        // body
+        std.plotEllipse(12, 25, 20 + xr, 25, -30, g);
+        if (feat[4] == 1) {
+            plothair(12, 25, 20 + xr, 25, -30, g);
+        }
+        // spots(20,25,12,25,-30,g);
+        // Hardcoded spots
+        if (feat[3] == 1) {
+            std.plotCircle(2, 20 + xr, 25, g);
+            std.plotCircle(2, 12 + xr, 38, g);
+            std.plotCircle(1, 24 + xr, 30, g);
+            std.plotCircle(1, 10 + xr, 30, g);
+            std.plotCircle(1, 28 + xr, 21, g);
+            std.plotCircle(1, 12 + xr, 21, g);
+            std.plotCircle(2, 28 + xr, 15, g);
+            std.plotCircle(2, 15 + xr, 15, g);
+        }
+        
+        // beaks
+        if (feat[0] == 0) {
+            std.plotTriangle2( -30, -4, -8 + xr, 46, 0, g);
+            std.plotTriangle2( -30, 4, -8 + xr, 54, 0, g);
+            // teeth
+            if (feat[1] == 1) {
+                for (int i = 4; i < 13; i++) {
+                    if (i % 2 == 0) {
+                        std.plotLine(-8 - i + xr, 52, -8 - i + xr, 51, g);
+                    }
+                    if (i % 2 == 1) {
+                        std.plotLine(-8 - i + xr, 48, -8 - i + xr, 49, g);
+                    }
+                }
+            }
+        }
+        if (feat[0] == 1) {
+            std.plotTriangle2( -16, -4, -8 + xr, 46, 0, g);
+            std.plotTriangle2( -16, 4, -8 + xr, 54, 0, g);
+            // teeth
+            if (feat[1] == 1) {
+                for (int i = 4; i < 9; i++) {
+                    if (i % 2 == 0) {
+                        std.plotLine(-8 - i + xr, 52, -8 - i + xr, 51, g);
+                    }
+                    if (i % 2 == 1) {
+                        std.plotLine(-8 - i + xr, 48, -8 - i + xr, 49, g);
+                    }
+                }
+            }
+
+        }
+
+        // hand 1
+        if (feat[7] == 0) {
+            std.plotEllipse( 5, 8, 0 + xr, 20, -120,g);
+            std.plotEllipse( 3, 5, -12 + xr, 16, -90, g);
+            std.plotCircle(4, -22 + xr, 16, g);
+            std.plotEllipse( 1, 3, -21 + xr, 22, 0, g);
+            std.plotEllipse( 1, 3, -26 + xr, 24, -30, g);
+            std.plotEllipse( 1, 3, -30 + xr, 21, -45, g);
+            std.plotEllipse( 1, 3, -28 + xr, 15, 90, g);
+            std.plotEllipse( 1, 2, -25 + xr, 12, -135, g);
+            // hand 2
+            int r = 10, z = 0;
+            std.plotEllipse( 4, 6, -3 + xr, 32, -120, g);
+            std.plotEllipse( 3, 5, -14 + xr, 30, -60, g);
+            std.plotCircle(5, -31 + r + xr, 36 - z, g);
+            std.plotEllipse( 1, 3, -27 + r + xr, 42 + z, 0, g);
+            std.plotEllipse( 1, 3, -32 + r + xr, 44 + z, -30, g);
+            std.plotEllipse( 1, 3, -37 + r + xr, 42 + z, -45, g);
+            std.plotEllipse( 1, 3, -38 + r + xr, 36 + z, 90, g);
+            std.plotEllipse( 1, 2, -34 + r + xr, 31 + z, -135, g);
+        }
+        if (feat[7] == 1) {
+            // hand1
+            std.plotEllipse( 5, 12, 0 + xr, 20, -120, g);
+            std.plotEllipse( 3, 8, -18 + xr, 16, -90, g);
+            std.plotCircle(5, -31 + xr, 18, g);
+            std.plotEllipse( 1, 3, -27 + xr, 24, 0, g);
+            std.plotEllipse( 1, 3, -32 + xr, 26, -30, g);
+            std.plotEllipse( 1, 3, -37 + xr, 24, -45, g);
+            std.plotEllipse( 1, 3, -38 + xr, 18, 90, g);
+            std.plotEllipse( 1, 2, -34 + xr, 13, -135, g);
+            // hand 2
+            std.plotEllipse( 5, 10, -5 + xr, 32, -120, g);
+            std.plotEllipse( 3, 8, -20 + xr, 30, -60, g);
+            std.plotCircle(5, -31 + xr, 36, g);
+            std.plotEllipse( 1, 3, -27 + xr, 42, 0, g);
+            std.plotEllipse( 1, 3, -32 + xr, 44, -30, g);
+            std.plotEllipse( 1, 3, -37 + xr, 42, -45, g);
+            std.plotEllipse( 1, 3, -38 + xr, 36, 90, g);
+            std.plotEllipse( 1, 2, -34 + xr, 31, -135, g);
+        }
+
+        // leg 1
+        std.plotEllipse( 6, 20, 33 + xr, -14, -10, g);
+        std.plotEllipse( 4, 15, 33 + xr, -45, 15, g);
+        std.plotEllipse( 3, 6, 7 + xr, -53, 50, g);
+        std.plotEllipse( 1, 2, 0 + xr, -55, 50, g);
+        std.plotEllipse( 1, 2, 2 + xr, -57, 50, g);
+        std.plotEllipse( 1, 2, 3 + xr, -58, 50, g);
+        // leg 2
+        std.plotEllipse( 6, 18, 15 + xr, -9, 30, g);
+        std.plotEllipse( 4, 17, 9 + xr, -36, -10, g);
+        std.plotEllipse( 3, 6, 26 + xr, -61, 70, g);
+        std.plotEllipse( 1, 2, 25 + xr, -65, 70, g);
+        std.plotEllipse( 1, 2, 20 + xr, -63, 70, g);
+        std.plotEllipse( 1, 2, 22 + xr, -64, 70, g);
+        // leg spots
+        if (feat[5] == 1) {
+            std.plotEllipse( 2, 2, 18 + xr, -2, 0, g);
+            std.plotEllipse( 2, 2, 12 + xr, -12, 0, g);
+            std.plotEllipse( 2, 2, 8 + xr, -30, 0, g);
+            std.plotEllipse( 2, 2, 9 + xr, -40, 0, g);
+            std.plotEllipse( 2, 2, 30 + xr, -5, 0, g);
+            std.plotEllipse( 2, 2, 34 + xr, -20, 0, g);
+            std.plotEllipse( 2, 2, 34 + xr, -40, 0, g);
+            std.plotEllipse( 2, 2, 31 + xr, -52, 0, g);
+        }
+
+        // body hair
+        if (feat[6] == 1) {
+            plothair(5, 12, 0 + xr, 20, -120, g);
+            plothair(3, 8, -18 + xr, 16, -90, g);
+            plothair(5, 10, -5 + xr, 32, -120, g);
+            plothair(3, 8, -20 + xr, 30, -60, g);
+            plothair(6, 20, 33 + xr, -14, -10, g);
+            plothair(4, 15, 33 + xr, -45, 15, g);
+            plothair(6, 18, 15 + xr, -9, 30, g);
+            plothair(4, 17, 9 + xr, -36, -10, g);
+        }
+
+        // tail
+        if (feat[8] == 0) {
+            std.plotEllipse(5, 10, 45 + xr, 13, 50, g);
+            if (feat[6] == 1) {
+                plothair(5, 10, 45 + xr, 13, 50, g);
+            }
+        }
+        if (feat[8] == 1) {
+            std.plotTriangle2(40, 5, 35 + xr, 13, 45, g);
+        }
+    }
+
+    public void plothair(int rx, int ry,int xc ,int yc,int angle,Graphics g){
+		double dx, dy, d1, d2, x, y;
+		int p1,p2,p3,p4,p5,p6,p7,p8;
+		double rot = 3.14*(angle%360)/180;
+		x = 0;
+		y = ry;
+		// Initial decision parameter of region 1
+		d1 = (ry * ry) - (rx * rx * ry) + (0.25 * rx * rx);
+
+		dx = 2 * ry * ry * x;
+		dy = 2 * rx * rx * y;
+		// For region 1
+		while (dx < dy)
+		{
+     
+			// Print points based on 4-way symmetry
+			p1=(int)((x*Math.cos(-rot)-y*Math.sin(-rot))+xc);
+			p2=(int)((x*Math.sin(-rot)+y*Math.cos(-rot))+yc);
+			p3=(int)(-(x*Math.cos(rot)-y*Math.sin(rot))+xc);
+			p4=(int)((x*Math.sin(rot)+y*Math.cos(rot))+yc);
+			p5=(int)((x*Math.cos(rot)-y*Math.sin(rot))+xc);
+			p6=(int)(-(x*Math.sin(rot)+y*Math.cos(rot))+yc);
+			p7=(int)(-(x*Math.cos(-rot)-y*Math.sin(-rot))+xc);
+			p8=(int)(-(x*Math.sin(-rot)+y*Math.cos(-rot))+yc);
+ 
+			std.plotLine(p1,p2,(int)(Math.random()*5)+p1-2,(int)(Math.random()*5)+p2-2,g);
+			std.plotLine(p3,p4,(int)(Math.random()*5)+p3-2,(int)(Math.random()*5)+p4-2,g);
+			std.plotLine(p5,p6,(int)(Math.random()*5)+p5-2,(int)(Math.random()*5)+p6-2,g);
+			std.plotLine(p7,p8,(int)(Math.random()*5)+p7-2,(int)(Math.random()*5)+p8-2,g);
+			
+			// Checking and updating value of
+			// decision parameter based on algorithm
+			if (d1 < 0)
+			{
+				x++;
+				dx = dx + (2 * ry * ry);
+				d1 = d1 + dx + (ry * ry);
+			}
+			else
+			{
+				x++;
+				y--;
+				dx = dx + (2 * ry * ry);
+				dy = dy - (2 * rx * rx);
+				d1 = d1 + dx - dy + (ry * ry);
+			}
+		}
+ 
+		// Decision parameter of region 2
+		d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) + ((rx * rx) * ((y - 1) * (y - 1))) - (rx * rx * ry * ry);
+		// Plotting points of region 2
+		while (y >= 0) {
+ 
+			// printing points based on 4-way symmetry
+			p1=(int)((x*Math.cos(-rot)-y*Math.sin(-rot))+xc);
+			p2=(int)((x*Math.sin(-rot)+y*Math.cos(-rot))+yc);
+			p3=(int)(-(x*Math.cos(rot)-y*Math.sin(rot))+xc);
+			p4=(int)((x*Math.sin(rot)+y*Math.cos(rot))+yc);
+			p5=(int)((x*Math.cos(rot)-y*Math.sin(rot))+xc);
+			p6=(int)(-(x*Math.sin(rot)+y*Math.cos(rot))+yc);
+			p7=(int)(-(x*Math.cos(-rot)-y*Math.sin(-rot))+xc);
+			p8=(int)(-(x*Math.sin(-rot)+y*Math.cos(-rot))+yc);
+ 
+			std.plotLine(p1,p2,(int)(Math.random()*5)+p1-2,(int)(Math.random()*5)+p2-2,g);
+			std.plotLine(p3,p4,(int)(Math.random()*5)+p3-2,(int)(Math.random()*5)+p4-2,g);
+			std.plotLine(p5,p6,(int)(Math.random()*5)+p5-2,(int)(Math.random()*5)+p6-2,g);
+			std.plotLine(p7,p8,(int)(Math.random()*5)+p7-2,(int)(Math.random()*5)+p8-2,g);
+			// Checking and updating parameter
+			// value based on algorithm
+			if (d2 > 0) {
+				y--;
+				dy = dy - (2 * rx * rx);
+				d2 = d2 + (rx * rx) - dy;
+			}
+			else {
+				y--;
+				x++;
+				dx = dx + (2 * ry * ry);
+				dy = dy - (2 * rx * rx);
+				d2 = d2 + dx - dy + (rx * rx);
+			}
+		}
+	}
 }

@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.lang.Math;
 
 // Class where all the Shape Drawing and plotting algorithms are stored.
 public class StdDrawing extends WorkBench {
@@ -21,46 +22,74 @@ public class StdDrawing extends WorkBench {
     }
 
     // plots an Ellipse using Midpoint Ellipse Drawing Algorithm.
-    public void plotEllipse(int a, int b, int xc, int yc, int deg, Graphics G) {
-        RotationalTransforms rot = new RotationalTransforms(xc, yc, deg);
-        double d2;
+    public void plotEllipse(int rx, int ry, int xc, int yc, int angle, Graphics G) {
+        double dx, dy, d1, d2, x, y;
+        double rot = 3.14 * (angle % 360) / 180;
+        x = 0;
+        y = ry;
+        // Initial decision parameter of region 1
+        d1 = (ry * ry) - (rx * rx * ry) + (0.25 * rx * rx);
 
-        int x = 0;
-        int y = b;
+        dx = 2 * ry * ry * x;
+        dy = 2 * rx * rx * y;
+        // For region 1
+        while (dx < dy) {
 
-        double d1 = b * b - a * a * b + 0.25 * a * a;
-        plotpoint((int) rot.rotateX(x + xc, y + yc), (int) rot.rotateY(x + xc, y + yc), G);
-        plotpoint((int) rot.rotateX(-x + xc, y + yc), (int) rot.rotateY(-x + xc, y + yc), G);
-        plotpoint((int) rot.rotateX(x + xc, -y + yc), (int) rot.rotateY(x + xc, -y + yc), G);
-        plotpoint((int) rot.rotateX(-x + xc, -y + yc), (int) rot.rotateY(-x + xc, -y + yc), G);
+            // Print points based on 4-way symmetry
+            plotpoint((int) ((x * Math.cos(rot) - y * Math.sin(-rot)) + xc),
+                    (int) ((x * Math.sin(-rot) + y * Math.cos(rot)) + yc), G);
+            plotpoint((int) (-(x * Math.cos(rot) - y * Math.sin(rot)) + xc),
+                    (int) ((x * Math.sin(rot) + y * Math.cos(rot)) + yc), G);
+            plotpoint((int) ((x * Math.cos(rot) - y * Math.sin(rot)) + xc),
+                    (int) (-(x * Math.sin(rot) + y * Math.cos(rot)) + yc), G);
+            plotpoint((int) (-(x * Math.cos(rot) - y * Math.sin(-rot)) + xc),
+                    (int) (-(x * Math.sin(-rot) + y * Math.cos(rot)) + yc), G);
 
-        while (a * a * (y - 0.5) > b * b * (x + 1)) {
+            // Checking and updating value of
+            // decision parameter based on algorithm
             if (d1 < 0) {
-                d1 += b * b * (2 * x + 3);
-            } else {
-                d1 += b * b * (2 * x + 3) + a * a * (-2 * y + 2);
-                y--;
-            }
-            x++;
-            plotpoint((int) rot.rotateX(x + xc, y + yc), (int) rot.rotateY(x + xc, y + yc), G);
-            plotpoint((int) rot.rotateX(-x + xc, y + yc), (int) rot.rotateY(-x + xc, y + yc), G);
-            plotpoint((int) rot.rotateX(x + xc, -y + yc), (int) rot.rotateY(x + xc, -y + yc), G);
-            plotpoint((int) rot.rotateX(-x + xc, -y + yc), (int) rot.rotateY(-x + xc, -y + yc), G);
-        } // Region 1 //
-
-        d2 = b * b * (x + 0.5) * (x + 0.5) + a * a * (y - 1) * (y - 1) - a * a * b * b;
-        while (y > 0) {
-            if (d2 < 0) {
-                d2 += b * b * (2 * x + 2) + a * a * (-2 * y + 3);
                 x++;
-            } else
-                d2 += a * a * (-2 * y + 3);
-            y--;
-            plotpoint((int) rot.rotateX(x + xc, y + yc), (int) rot.rotateY(x + xc, y + yc), G);
-            plotpoint((int) rot.rotateX(-x + xc, y + yc), (int) rot.rotateY(-x + xc, y + yc), G);
-            plotpoint((int) rot.rotateX(x + xc, -y + yc), (int) rot.rotateY(x + xc, -y + yc), G);
-            plotpoint((int) rot.rotateX(-x + xc, -y + yc), (int) rot.rotateY(-x + xc, -y + yc), G);
-        } // Region 2 //
+                dx = dx + (2 * ry * ry);
+                d1 = d1 + dx + (ry * ry);
+            } else {
+                x++;
+                y--;
+                dx = dx + (2 * ry * ry);
+                dy = dy - (2 * rx * rx);
+                d1 = d1 + dx - dy + (ry * ry);
+            }
+        }
+
+        // Decision parameter of region 2
+        d2 = ((ry * ry) * ((x + 0.5) * (x + 0.5))) + ((rx * rx) * ((y - 1) * (y - 1))) - (rx * rx * ry * ry);
+        // Plotting points of region 2
+        while (y >= 0) {
+
+            // printing points based on 4-way symmetry
+            plotpoint((int) ((x * Math.cos(-rot) - y * Math.sin(-rot)) + xc),
+                    (int) ((x * Math.sin(-rot) + y * Math.cos(-rot)) + yc), G);
+            plotpoint((int) (-(x * Math.cos(rot) - y * Math.sin(rot)) + xc),
+                    (int) ((x * Math.sin(rot) + y * Math.cos(rot)) + yc), G);
+            plotpoint((int) ((x * Math.cos(rot) - y * Math.sin(rot)) + xc),
+                    (int) (-(x * Math.sin(rot) + y * Math.cos(rot)) + yc), G);
+            plotpoint((int) (-(x * Math.cos(-rot) - y * Math.sin(-rot)) + xc),
+                    (int) (-(x * Math.sin(-rot) + y * Math.cos(-rot)) + yc), G);
+
+            // Checking and updating parameter
+            // value based on algorithm
+            if (d2 > 0) {
+                y--;
+                dy = dy - (2 * rx * rx);
+                d2 = d2 + (rx * rx) - dy;
+            } else {
+                y--;
+                x++;
+                dx = dx + (2 * ry * ry);
+                dy = dy - (2 * rx * rx);
+                d2 = d2 + dx - dy + (rx * rx);
+            }
+        }
+        // Region 2 //
 
     }
 
@@ -110,23 +139,65 @@ public class StdDrawing extends WorkBench {
 
     // plot the default line with degree 0
     public void plotLine(int x0, int y0, int x1, int y1, Graphics G) {
-        plotLine(x0, y0, x1, y1, 0, G);
+        int dy, dx, px, py, steps;
+        double yt, xt, yk, xk;
+        dy = y1 - y0;
+        dx = x1 - x0;
+        if (Math.abs(dy) > Math.abs(dx)) {
+            steps = Math.abs(dy);
+        } else {
+            steps = Math.abs(dx);
+        }
+        yk = (double) dy / steps;
+        xk = (double) dx / steps;
+        yt = y0;
+        xt = x0;
+        for (int temp = 0; temp <= steps; temp++) {
+            py = (int) Math.round(yt);
+            px = (int) Math.round(xt);
+            yt += yk;
+            xt += xk;
+            plotpoint(px, py, G);
+        }
     }
 
     // plots a triangle using plotLines with added rotational support
-    public void plotTriangle(int x0, int y0, int x1, int y1, int x2, int y2, int deg, Graphics G) {
+    public void plotTriangle1(int base, int height, int xc, int yc, int angle, Graphics G) {
+        double rot = 3.14 * (angle % 360) / 180;
+        int xt1 = -base / 2;
+        int xt2 = base / 2;
+        int yt1 = -height / 2;
+        int yt2 = height / 2;
 
-        int centroid_x = (x0 + x1 + x2) / 3;
-        int centroid_y = (y0 + y1 + y2) / 3;
-
-        RotationalTransforms rot = new RotationalTransforms(centroid_x, centroid_y, deg);
-        plotLine(rot.rotateX(x0, y0), rot.rotateY(x0, y0), rot.rotateX(x1, y1), rot.rotateY(x1, y1), G);
-        plotLine(rot.rotateX(x1, y1), rot.rotateY(x1, y1), rot.rotateX(x2, y2), rot.rotateY(x2, y2), G);
-        plotLine(rot.rotateX(x2, y2), rot.rotateY(x2, y2), rot.rotateX(x0, y0), rot.rotateY(x0, y0), G);
+        plotLine((int) ((xt1 * Math.cos(rot) - yt1 * Math.sin(rot)) + xc),
+                (int) ((xt1 * Math.sin(rot) + yt1 * Math.cos(rot)) + yc),
+                (int) ((xt2 * Math.cos(rot) - yt1 * Math.sin(rot)) + xc),
+                (int) ((xt2 * Math.sin(rot) + yt1 * Math.cos(rot)) + yc), G);
+        plotLine((int) ((xt1 * Math.cos(rot) - yt1 * Math.sin(rot)) + xc),
+                (int) ((xt1 * Math.sin(rot) + yt1 * Math.cos(rot)) + yc), (int) ((-yt2 * Math.sin(rot)) + xc),
+                (int) ((yt2 * Math.cos(rot)) + yc), G);
+        plotLine((int) ((xt2 * Math.cos(rot) - yt1 * Math.sin(rot)) + xc),
+                (int) ((xt2 * Math.sin(rot) + yt1 * Math.cos(rot)) + yc), (int) ((-yt2 * Math.sin(rot)) + xc),
+                (int) ((yt2 * Math.cos(rot)) + yc), G);
     }
 
     // plots a triangle with default deg=0
-    public void plotTriangle(int x0, int y0, int x1, int y1, int x2, int y2, Graphics G) {
-        plotTriangle(x0, y0, x1, y1, x2, y2, 0, G);
+    public void plotTriangle2(int base, int height, int xc, int yc, int angle, Graphics G) {
+        double rot = 3.14 * (angle % 360) / 180;
+        int xt1 = 0;
+        int xt2 = base / 2;
+        int yt1 = -height / 2;
+        int yt2 = height / 2;
+
+        plotLine((int) ((xt1 * Math.cos(rot) - yt1 * Math.sin(rot)) + xc),
+                (int) ((xt1 * Math.sin(rot) + yt1 * Math.cos(rot)) + yc),
+                (int) ((xt2 * Math.cos(rot) - yt1 * Math.sin(rot)) + xc),
+                (int) ((xt2 * Math.sin(rot) + yt1 * Math.cos(rot)) + yc), G);
+        plotLine((int) ((xt1 * Math.cos(rot) - yt1 * Math.sin(rot)) + xc),
+                (int) ((xt1 * Math.sin(rot) + yt1 * Math.cos(rot)) + yc), (int) ((-yt2 * Math.sin(rot)) + xc),
+                (int) ((yt2 * Math.cos(rot)) + yc), G);
+        plotLine((int) ((xt2 * Math.cos(rot) - yt1 * Math.sin(rot)) + xc),
+                (int) ((xt2 * Math.sin(rot) + yt1 * Math.cos(rot)) + yc), (int) ((-yt2 * Math.sin(rot)) + xc),
+                (int) ((yt2 * Math.cos(rot)) + yc), G);
     }
 }
