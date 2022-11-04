@@ -8,9 +8,10 @@ class WorkBench extends JPanel
 
     JButton zoomIN;
     JButton zoomOUT;
-
-    static int parent1[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    static int parent2[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+    
+    // feature vector format : {beak(size),beak(tooth),ear(shape),body(spots),body(hair),limbs(spot/hair/size),tail(shapes)}
+    static int parent1[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // feature vector for parent 1
+    static int parent2[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1 }; // feature vector for parent 2
 
     static int child[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     static int var[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -25,10 +26,13 @@ class WorkBench extends JPanel
     Color foreground = new Color(61, 64, 67);
     Color dark_lines = new Color(14, 15, 16);
 
-    JButton b1 = new JButton("Triangle Tail");
-    JButton b2 = new JButton("Circular Tail");
-    JButton b3 = new JButton("Round Ears");
-    JButton b4 = new JButton("Triangular Ears");
+    //JToggleButton p1_1 = new JToggleButton("P1: Round Ears");
+
+
+    JButton b1 = new JButton("Parent1 Triangular Tail");
+    JButton b2 = new JButton("Parent1 Circular Tail");
+    JButton b3 = new JButton("Parent1 Triangular Ears");
+    JButton b4 = new JButton("Parent1 Round Ears");
 
     Insets ins;
 
@@ -74,6 +78,22 @@ class WorkBench extends JPanel
             }
         });
 
+        /*p1_1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ie) {
+                if(p1_1.isSelected())
+                {
+                    parent1[2] = 0;
+                    //jlab.setText("Parent 1[0] has state 0");
+                    repaint();
+                }
+                else
+                {
+                    parent1[2] = 1;
+                    repaint();
+                }
+            }
+        });*/
+
         b1.setBounds(30, 60, 100, 20);
         b2.setBounds(140, 60, 100, 20);
         b3.setBounds(30, 90, 100, 20);
@@ -83,6 +103,7 @@ class WorkBench extends JPanel
         add(b1);
         add(b3);
         add(b4);
+        //add(p1_1);
     }
 
     public void childset(int arr[], int arr2[]) {
